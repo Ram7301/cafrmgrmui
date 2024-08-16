@@ -19,7 +19,7 @@ export interface LogoProps {
   width?: number;
 }
 
-export function Logo({ color = 'dark', emblem, height = HEIGHT, width = WIDTH }: LogoProps): React.JSX.Element {
+export function Logo({ color = 'light', emblem, height = HEIGHT, width = WIDTH }: LogoProps): React.JSX.Element {
   let url: string;
 
   if (emblem) {
@@ -51,8 +51,8 @@ export function DynamicLogo({
 
   return (
     <NoSsr fallback={<Box sx={{ height: `${height}px`, width: `${width}px` }} />}>
-      {/* <Logo color={color} height={height} width={width} {...props} /> */}
-      {/* <Typography>Cafe Mgr</Typography> */}
+      <Logo color={color} height={height} width={width}  />
+      <Typography>Cafe Mgr</Typography>
     </NoSsr>
   );
 }

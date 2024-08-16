@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import dayjs from 'dayjs';
+import { useAppSelector } from '@/app/redux';
 
 const statusMap = {
   pending: { label: 'Pending', color: 'warning' },
@@ -35,85 +37,16 @@ export interface LatestOrdersProps {
 }
 
 export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.Element {
-  const data = [
-    {
-      id: 1,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939970',
-      SH_PRODUCT_NAME: 'Veg Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 8649.81,
-    },
-    {
-      id: 12,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939971',
-      SH_PRODUCT_NAME: 'Mashroom Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 6483.75,
-    },
-    {
-      id: 31,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939972',
-      SH_PRODUCT_NAME: 'Paneer Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 2742.45,
-    },
-    {
-      id: 14,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939972',
-      SH_PRODUCT_NAME: 'Panner Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 9591.75,
-    },
-    {
-      id: 134,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939973',
-      SH_PRODUCT_NAME: 'Veg Cheese Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 14896.35,
-    },
-    {
-      id: 34,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939974',
-      SH_PRODUCT_NAME: 'Egg Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 17603.8,
-    },
-    {
-      id: 1342,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939975',
-      SH_PRODUCT_NAME: 'Egg Cheese Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 9021.05,
-    },
-    {
-      id: 2342,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939976',
-      SH_PRODUCT_NAME: 'Chicken Pasta-250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 28370.3,
-    },
-    {
-      id: 23423,
-      SH_CATEGORY_ID: '102',
-      SH_CATEGORY: 'Pasta',
-      SH_PRODUCT_ID: '939977',
-      SH_PRODUCT_NAME: 'Mix Veg Pasta -250 G',
-      'SUM(SH_PAID_BY_EMPLOYEE)': 10070.1,
-    },
-  ];
+
+
+  const productData = useAppSelector((state) => state.global.productPerformanceData)
+  const isLoading = useAppSelector((state) => state.global.productPerformanceLoading)
   return (
     <Card sx={sx}>
       <CardHeader title="Product Proformance" />
       <Divider />
       <Box sx={{ overflowX: 'auto' }}>
+        {isLoading ? <>loading..</>:
         <Table sx={{ minWidth: 800 }}>
           <TableHead>
             <TableRow>
@@ -122,13 +55,13 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((order) => {
+            {productData.map((order:any) => {
               // const { label, color } = statusMap[order.status] ?? { label: 'Unknown', color: 'default' };
 
               return (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.SH_PRODUCT_NAME}</TableCell>
-                  <TableCell>{order['SUM(SH_PAID_BY_EMPLOYEE)']}</TableCell>
+                <TableRow hover key={order.ProductID}>
+                  <TableCell>{order.ProductName}</TableCell>
+                  <TableCell>₹{order.SalesValue}</TableCell>
                   {/* <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell> */}
                   {/* <TableCell>
                     <Chip color={color} label={label} size="small" />
@@ -137,7 +70,7 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
               );
             })}
           </TableBody>
-        </Table>
+        </Table>}
       </Box>
       <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>

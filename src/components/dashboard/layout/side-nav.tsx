@@ -14,7 +14,7 @@ import { CaretUpDown as CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/C
 import type { NavItemConfig } from '@/types/nav';
 import { paths } from '@/paths';
 import { isNavItemActive } from '@/lib/is-nav-item-active';
-import { Logo } from '@/components/core/logo';
+import { DynamicLogo, Logo } from '@/components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
@@ -51,8 +51,8 @@ export function SideNav(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box  sx={{ display: 'inline-flex' }}>
-          {/* <Logo color="light" height={32} width={122} /> */}
+        <Box  sx={{ display: 'inline-flex',alignItems:'center' }}>
+          <Logo  width={100} height={100}  />
           <Typography fontSize={25}>Cafe Mgr</Typography>
         </Box>
         {/* <Box

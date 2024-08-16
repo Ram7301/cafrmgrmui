@@ -1,6 +1,5 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
-import { useGetDashboardMetricsQuery } from '@/state/api';
 import Grid from '@mui/material/Unstable_Grid2';
 import dayjs from 'dayjs';
 
@@ -40,7 +39,7 @@ export default function Page(): React.JSX.Element {
         <Sales sx={{ height: '100%' }} />
       </Grid>
       <Grid lg={4} md={6} xs={12}>
-        <Traffic chartSeries={[63, 15, 22]} labels={['Sales', '', 'Phone']} sx={{ height: '100%' }} />
+        <Traffic chartSeries={[63, 15, 22]} labels={['Sales', 'Lap', 'Phone']} sx={{ height: '100%' }} />
       </Grid>
       <Grid lg={4} md={6} xs={12}>
         <LatestProducts

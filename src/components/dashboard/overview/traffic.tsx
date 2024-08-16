@@ -15,6 +15,7 @@ import { Phone as PhoneIcon } from '@phosphor-icons/react/dist/ssr/Phone';
 import type { ApexOptions } from 'apexcharts';
 
 import { Chart } from '@/components/core/chart';
+import { useGetWeekDaysMetricsQuery } from '@/state/api';
 
 const iconMapping = { Desktop: DesktopIcon, Tablet: DeviceTabletIcon, Phone: PhoneIcon } as Record<string, Icon>;
 
@@ -27,15 +28,48 @@ export interface TrafficProps {
 
 
 export function Traffic({ chartSeries, labels, sx }: TrafficProps): React.JSX.Element {
-  const chartOptions = useChartOptions(labels);
+  
+  const {data , isLoading } = useGetWeekDaysMetricsQuery();
+
+  const chartData = data?.data || [];
+
+  const cate = chartData.map((a ) =>  {
+    if(a.WeekDays == 0){
+      return 'Mon'
+    } 
+    if(a.WeekDays == 1){
+      return 'Tus'
+    } 
+    if(a.WeekDays == 2){
+      return 'Wen'
+    } 
+    if(a.WeekDays == 3){
+      return 'Ths'
+    } 
+    if(a.WeekDays == 4){
+      return 'Fri'
+    } 
+    if(a.WeekDays == 5){
+      return 'Sat'
+    } 
+    if(a.WeekDays == 6){
+      return 'Sun'
+    } 
+  
+  })
+  console.log("🚀 ~ Traffic ~ cate:", cate)
+  console.log("🚀 ~ Traffic ~ data:", data)
+  const chartOptions = useChartOptions(cate);
+
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Weekly Sales" />
+      <CardHeader title="Weekly Day Sales" />
       <CardContent>
         <Stack spacing={2}>
-          <Chart height={300} options={chartOptions} series={chartSeries} type="donut" width="100%" />
-          <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+          {isLoading ? <>Loading...</> : <Chart height={300} options={chartOptions} series={chartData.map((a ) => Number(a.SalesValue))} type="donut" width="100%" />}
+         
+          {/* <Stack direction="row" spacing={2} sx={{ alignItems: 'center', justifyContent: 'center' }}>
             {chartSeries.map((item, index) => {
               const label = labels[index];
               const Icon = iconMapping[label];
@@ -50,22 +84,22 @@ export function Traffic({ chartSeries, labels, sx }: TrafficProps): React.JSX.El
                 </Stack>
               );
             })}
-          </Stack>
+          </Stack> */}
         </Stack>
       </CardContent>
     </Card>
   );
 }
 
-function useChartOptions(labels: string[]): ApexOptions {
+function useChartOptions(labels: any): ApexOptions {
   const theme = useTheme();
 
   return {
     chart: { background: 'transparent' },
-    colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.warning.main],
+    // colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.warning.main],
     dataLabels: { enabled: false },
     labels,
-    legend: { show: false },
+    legend: { show: true ,position:'bottom' },
     plotOptions: { pie: { expandOnClick: false } },
     states: { active: { filter: { type: 'none' } }, hover: { filter: { type: 'none' } } },
     stroke: { width: 0 },

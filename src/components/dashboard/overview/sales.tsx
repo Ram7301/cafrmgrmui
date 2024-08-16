@@ -3,7 +3,6 @@
 import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/redux';
 import { fetchFastMovingChart } from '@/state';
-import { useGetDashboardMetricsQuery } from '@/state/api';
 import { Box, CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -16,9 +15,10 @@ import type { SxProps } from '@mui/material/styles';
 import { ArrowClockwise as ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr/ArrowClockwise';
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import type { ApexOptions } from 'apexcharts';
-import { useDispatch } from 'react-redux';
 
-import { Chart } from '@/components/core/chart';
+import Chart from 'react-apexcharts';
+
+// import { Chart } from '@/components/core/chart';
 
 export interface SalesProps {
   // chartSeries: { name: string; data: number[] }[];
@@ -28,6 +28,7 @@ export interface SalesProps {
 export function Sales({ sx }: SalesProps): React.JSX.Element {
   const xaxis = useAppSelector((state) => state.global.xaxis);
   const yaxis = useAppSelector((state) => state.global.yaxis);
+  console.log("🚀 ~ Sales ~ yaxis:", yaxis)
   const loading = useAppSelector((state) => state.global.isLoading);
   const status = useAppSelector((state) => state.global.status);
 

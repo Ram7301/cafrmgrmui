@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {  useGetProductCateMetricsQuery } from '@/state/api';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -17,6 +17,8 @@ import type { SxProps } from '@mui/material/styles';
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import { DotsThreeVertical as DotsThreeVerticalIcon } from '@phosphor-icons/react/dist/ssr/DotsThreeVertical';
 import dayjs from 'dayjs';
+import { useAppDispatch, useAppSelector } from '@/app/redux';
+import { getProductCateMetrics, getProductMetrics } from '@/state';
 
 export interface Product {
   id: string;
@@ -50,17 +52,25 @@ export function LatestProducts({ products = [], sx }: LatestProductsProps): Reac
     { id: 15, value: 47256.76, label: "Rolls", image: '/assets/product-5.png', },
   ];
 
+  const disatch = useAppDispatch();
 
-  const {data , isLoading } = useGetProductCateMetricsQuery()
-  console.log("🚀 ~ LatestProducts ~ data:", data)
+  useEffect(()=>{
+    disatch(getProductCateMetrics())
+  },[])
+
+  const isLoading = useAppSelector((state) => state.global.pLoading);
+  const data = useAppSelector((state) => state.global.ProductCate) || [];
+
+ 
 
   return (
     <Card sx={sx}>
       <CardHeader title="Top Products Analysis" />
       <Divider />
-      <List>
-        {dataw.map((product, index) => (
-          <ListItem divider={index < products.length - 1} key={product.id}>
+      {isLoading ? <>Loading...</>: 
+      <List style={{maxHeight: '600px', overflow: 'auto'}} >
+        {data.map((product : any, index) => (
+          <ListItem divider={index < products.length - 1} key={product.CategoryID }>
             {/* <ListItemAvatar>
               {product.image ? (
                 <Box component="img" src={product.image} sx={{ borderRadius: 1, height: '38px', width: '38px' }} />
@@ -76,30 +86,28 @@ export function LatestProducts({ products = [], sx }: LatestProductsProps): Reac
               )}
             </ListItemAvatar> */}
             <ListItemText
-              primary={product.label}
+              primary={product.CategoryName}
               primaryTypographyProps={{ variant: 'subtitle1' }}
               // secondary={`Updated ${dayjs(product.updatedAt).format('MMM D, YYYY')}`}
               // secondaryTypographyProps={{ variant: 'body2' }}
               
             />
-            {/* <IconButton edge="end">
-              <DotsThreeVerticalIcon weight="bold" />
-              {product.value}
-            </IconButton> */}
-            {product.value}
+            <Button variant='text' sx={{textAlign:'right'}} onClick={()=>disatch(getProductMetrics(Number(product.CategoryID)))} >₹{product.SalesValue}</Button>
           </ListItem>
         ))}
       </List>
+       } 
+      
       <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>
-        <Button
+        {/* <Button
           color="inherit"
           endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />}
           size="small"
           variant="text"
         >
           View all
-        </Button>
+        </Button> */}
       </CardActions>
     </Card>
   );
